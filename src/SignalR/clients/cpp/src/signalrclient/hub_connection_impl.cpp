@@ -118,7 +118,8 @@ namespace signalr
                 auto connection = weak_connection.lock();
                 if (!connection)
                 {
-                    //TODO
+                    // The connection has been destructed, we should just return and avoid any unobserved task exceptions
+                    return pplx::task_from_result();
                 }
                 return connection->send(_XPLATSTR("{\"protocol\":\"json\",\"version\":1}\x1e"))
                     .then([this](pplx::task<void> previous_task)
